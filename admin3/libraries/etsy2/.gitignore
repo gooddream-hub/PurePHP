@@ -1,0 +1,4 @@
+vendor/
+scripts/autoload.php
+test.php
+auth.php

@@ -1,0 +1,61 @@
+/*invoice print page*/
+.navbar-search {width:700px !important;}
+.navbar-search label{margin-right:10px;}
+.navbar-search select{margin-right:10px;}
+
+.btn-print{margin-top:16px;}
+.print hr{border:4px solid #D3D3D3;}
+.print h1{font-weight: bold; font-size: 2em;}
+.print .invoice_num{margin-top:-24px;}
+.print .phead, .print .shipmethod{padding-left:3em;}
+.print .phead h1 span{position:relative; left:120px; bottom:-20px; color: #E8E8E8; font-size:1.7em;}
+
+.print .shipmethod{margin-top:-10px;}
+.print .shipmethod td{padding-right:70px;}
+
+.print table{margin:3em 3em 0 1em;}
+.print thead{border-bottom: 2px solid #D3D3D3}
+.print th,td{padding:0 30px;}
+.print .details{border-bottom:2px solid #D3D3D3;}
+
+.print .subtotal{position:relative; left:475px; margin-top:20px;}
+
+.print .shipto{margin-left:40px; padding-bottom:40px;}
+.print .shipto h3{font-size:1.4em; font-weight:bold;}
+.print .shipto p{padding:0; margin:0;}
+
+.print .invoice_bottom{background-color: #F5F5F5; padding:30px 40px 0 40px; color:#696969}
+.print .invoice_bottom p{padding:0;margin:0;}
+.print .invoice_bottom .left .address{float:left; margin-right:70px;}
+.print .invoice_bottom .right{margin-top:20px;}
+.print .invoice_bottom .right h5{float:left; margin-right:10px;}
+.print .invoice_bottom .right i{float:left;}
+
+.print_label {padding: 20px;}
+.print_label img{width:8.5in;}
+
+.loading {
+    vertical-align: middle;
+    border-style: none;
+    /* width: 100px; */
+    display: flex;
+    /* height: 100px; */
+    text-align: center;
+    margin: auto;
+}
+
+.loading-content{
+    background: white;
+    border: 0px;
+    /* width: 118px; */
+    height: 130px;
+    text-align: center;
+}
+
+.loading-content p{
+    color: black;
+}
+
+.label-img{
+    width:100%;
+}

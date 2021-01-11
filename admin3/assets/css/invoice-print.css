@@ -1,0 +1,7 @@
+.static-top{display:none;}
+.sidebar{display:none;}
+.print {background-color: #fff !important;}
+.container-fluid{background-color: #fff !important;}
+
+/*.print .invoice_bottom{width:100%; position:absolute;  bottom:0;}*/
+.print_label {page-break-before: always; padding-top:2in;}
