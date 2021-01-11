@@ -1,7 +1,8 @@
 <?php
     // local
-    define("SITE_ROOT_PATH","J:/Workspace/CodeIgniter/fabric-bolt/");
-    define("SITE_URL","http://localhost:140/");
+    //define("SITE_ROOT_PATH","J:/Workspace/CodeIgniter/fabric-bolt/");
+    define("SITE_ROOT_PATH","D:/@CaitlynJob/PurePHP/");
+    define("SITE_URL","http://localhost/");
   
 
     // live

@@ -147,7 +147,7 @@ function getProductsById($id)
 }
 
 function getTypeCatsList($search_term = '', $limit = 1000) {
-    include('../../common/database.php');
+    include('../../common/database.php'); 
     if ($search_term) {
         $sql = "SELECT CONCAT(`im`.`type`, ' ', `im`.`cat`) as category
                 FROM `inven_mj` as im

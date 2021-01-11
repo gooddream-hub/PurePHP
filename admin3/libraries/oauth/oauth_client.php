@@ -463,6 +463,7 @@ class oauth_client_class
 			case 'multipart/form-data':
 				if(IsSet($options['RequestBody']))
 					return($this->SetError('the request body is defined automatically from the parameters'));
+					
 				$arguments['PostValues'] = $post_values;
 				break;
 			case 'application/json':
@@ -480,8 +481,8 @@ class oauth_client_class
 				$arguments['Body'] = $options['RequestBody'];
 				break;
 		}
-		
-		$arguments['Headers']['Accept'] = (IsSet($options['Accept']) ? $options['Accept'] : '*/*');
+	
+		$arguments['Headers']['Accept'] = (IsSet($options['Accept']) ? $options['Accept'] : '*/*');		
 		//Same in Data
 		switch($authentication = (IsSet($options['AccessTokenAuthentication']) ? strtolower($options['AccessTokenAuthentication']) : ''))
 		{
@@ -500,7 +501,7 @@ class oauth_client_class
 		if(IsSet($options['RequestHeaders']))
 			$arguments['Headers'] = array_merge($arguments['Headers'], $options['RequestHeaders']);
 		// Same in here
-
+		
 		// From here...
 		if(strlen($error = $http->SendRequest($arguments))
 		|| strlen($error = $http->ReadReplyHeaders($headers)))
@@ -509,7 +510,7 @@ class oauth_client_class
 			return($this->SetError('it was not possible to retrieve the '.$options['Resource'].': '.$error));
 		}
 		$error = $http->ReadWholeReplyBody($data);
-
+echo $http->response_status;
 		$http->Close();
 		if(strlen($error))
 		{
@@ -520,7 +521,7 @@ class oauth_client_class
 		
 		$content_type = (IsSet($options['ResponseContentType']) ? $options['ResponseContentType'] : (IsSet($headers['content-type']) ? strtolower(trim(strtok($headers['content-type'], ';'))) : 'unspecified'));
 		$content_type = preg_replace('/^(.+\\/).+\\+(.+)$/', '\\1\\2', $content_type); 
-
+		
 		switch($content_type)
 		{
 			case 'text/javascript':

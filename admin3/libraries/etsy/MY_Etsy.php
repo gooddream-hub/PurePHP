@@ -206,7 +206,6 @@ class MY_Etsy {
 				$this->client->CallAPI($api_url, 'POST', $listing['listing_data'], array('FailOnAccessError'=>true), $response);
 				
 				var_dump($response);
-				exit;
 
 				if(isset($response->results) && !empty($response->results[0]->listing_id)) {
 					$listing_id = $response->results[0]->listing_id; // Etsy id
@@ -250,7 +249,7 @@ class MY_Etsy {
 					}
 				} else {
 					$resp[$invid]['data'] = 'error';
-					$resp[$invid]['msg'] = str_replace('_', ' ', implode('<br>', array_keys($response)));
+					//$resp[$invid]['msg'] = str_replace('_', ' ', implode('<br>', array_keys($response)));					
 				}
 			} catch (OAuthException $e) {
 				$resp[$invid]['access'] = 'error';
@@ -261,6 +260,7 @@ class MY_Etsy {
 			$resp[$invid]['msg'] = 'No access token';
 		}
 		return $resp;
+		exit;
 	}
 
 	public function validateListing($listing) {

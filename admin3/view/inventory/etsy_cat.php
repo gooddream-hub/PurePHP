@@ -85,7 +85,7 @@
                                                     <form method="post" action="../../controller/inventory/etsy_cat.php" id="category_form" class="form-inline">
                                                         <input type="hidden" name="category" id="category" />
                                                         <div class="col-md-6 offset-md-3">
-                                                            <input type="text" class="form-control" style="width:100%;" id="suggest" name="suggest" autocomplete="off" placeholder="Category title" />
+                                                            <input type="text" class="form-control" style="width:100%;" id="suggest" name="suggest" autocomplete="on" placeholder="Category title" />
                                                         </div>
                                                     </form>
                                                 </div>
@@ -221,7 +221,7 @@
                 tinyMCEInit();
                 loadCategoryForm();
 
-                $('#etsyCat').on('click', '#showProducts', function(){
+                $('#etsyCat').on('click', '#showProducts', function(){ 
                     $.ajax({
                         type: "POST",
                         url: '../../controller/inventory/etsy_cat.php',
@@ -414,7 +414,7 @@
                             document.getElementById("etsyProd_next").style.display = "block";
                         },
                         error: function(result) {
-                            
+                            alert(result);
                         }
                     });
                     return false;
@@ -483,7 +483,7 @@
                         url: action,
                         dataType: 'json',
                         data: $(this).serialize() + "&type=import",
-                        success: function (data) {
+                        success: function (data) { alert(data);
                             if(data.access == 'success') {
                                 var done = true;
                                 $.each(data.info, function(key, val){
@@ -525,6 +525,10 @@
                                 $('#myModal').find('.modal-body').html('<div class="text-danger">'+data.msg+'</div>');
                                 $('#myModal').modal('show');
                             }
+                        },
+                        error: function(data) {
+                            console.log(data);
+                            alert(data);
                         }
                     });
                     return false;

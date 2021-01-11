@@ -51,7 +51,6 @@ if($_POST['type'] == 'category') {
 }
 
 if($_POST['type'] == 'import') {
-
     $listings = array();
     include('../../libraries/etsy/etsy_helper.php');
     foreach ($_POST['listings'] as $invid => $listing) {
@@ -87,9 +86,9 @@ if($_POST['type'] == 'import') {
         $resp['msg'] = 'Start add products';
         foreach ($listings as $invid => $value) {
             $valid = $my_etsy->validateListing($value);
-            if($valid['is_valid']) {
-                $res = $my_etsy->postListing($invid, $value);
-                $resp['info'][$invid] = $res[$invid];
+            if($valid['is_valid']) {                
+                $res = $my_etsy->postListing($invid, $value);                
+                $resp['info'][$invid] = $res[$invid];                
                 usleep(400000);
             } else {
                 $resp['info'][$invid]['data'] = 'error';
@@ -97,10 +96,12 @@ if($_POST['type'] == 'import') {
                 $resp['info'][$invid]['errors'] = $valid['errors'];
                 print_r('error in here');exit;
             }
-        }
+        }        
     } else {
         $resp['access'] = 'error';
         $resp['msg'] = 'No any products found for add to etsy.';
     }
+    
     echo json_encode($resp);
+    exit;
 }
