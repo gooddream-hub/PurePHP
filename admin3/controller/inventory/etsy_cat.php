@@ -77,8 +77,12 @@ if($_POST['type'] == 'import') {
         $listings[$invid]['listing_data'] = $listing_data;
         $listings[$invid]['listing_img'] = (isset($listing['img'])?$listing['img']:array());
     }
-
+/* token test  */
     $my_etsy = new MY_Etsy();
+    $my_etsy->etsy_get_token();
+    echo $my_etsy->etsy_get_token();
+    exit();
+/*----------------------*/
     $my_etsy->getAccessToken(SITE_URL . 'admin3/view/' . 'inventory/etsy_cat/import');
 
     if($listings) {

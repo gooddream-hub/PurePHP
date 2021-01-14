@@ -482,7 +482,7 @@ class oauth_client_class
 				break;
 		}
 	
-		$arguments['Headers']['Accept'] = (IsSet($options['Accept']) ? $options['Accept'] : '*/*');		
+		$arguments['Headers']['Accept'] = (IsSet($options['Accept']) ? $options['Accept'] : '*/*');	
 		//Same in Data
 		switch($authentication = (IsSet($options['AccessTokenAuthentication']) ? strtolower($options['AccessTokenAuthentication']) : ''))
 		{
@@ -501,7 +501,10 @@ class oauth_client_class
 		if(IsSet($options['RequestHeaders']))
 			$arguments['Headers'] = array_merge($arguments['Headers'], $options['RequestHeaders']);
 		// Same in here
-		
+		$http->SendRequest($arguments);
+		$http->ReadReplyHeaders($headers);
+		print_r($http->response_status);
+		echo $http->response_status;exit;
 		// From here...
 		if(strlen($error = $http->SendRequest($arguments))
 		|| strlen($error = $http->ReadReplyHeaders($headers)))
@@ -912,7 +915,6 @@ echo $http->response_status;
 						$this->refresh_token = $access_token['refresh'];
 				}
 
-				
 				$oauth = array(
 					(strlen($this->access_token_parameter) ? $this->access_token_parameter : 'oauth_token')=>((IsSet($options['2Legged']) && $options['2Legged']) ? '' : $this->access_token)
 				);
@@ -947,7 +949,8 @@ echo $http->response_status;
 				return($this->SetError($this->oauth_version.' is not a supported version of the OAuth protocol'));
 		}
 		//Same in Data.
-
+$test = ($this->SendAPIRequest($url, $method, $parameters, $oauth, $options, $response));
+print_r($test);exit;
 		return($this->SendAPIRequest($url, $method, $parameters, $oauth, $options, $response));
 	}
 

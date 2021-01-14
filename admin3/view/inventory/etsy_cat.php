@@ -527,8 +527,8 @@
                             }
                         },
                         error: function(data) {
-                            console.log(data);
-                            alert(data);
+                            
+                            alert("asfdasfasf");
                         }
                     });
                     return false;

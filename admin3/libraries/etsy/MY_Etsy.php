@@ -23,8 +23,8 @@ class MY_Etsy {
 		// $this->client->redirect_uri       = 'https://' . $_SERVER['HTTP_HOST'] . '/admin3/libraries/etsy/callback.php'; // Here is change
 		$this->client->configuration_file = SITE_ROOT_PATH.'admin3/libraries/oauth/oauth_configuration.json';
 		
-		$this->client->client_id          = 'ajocsi6rfi22tzv7kx5g8iop';
-		$this->client->client_secret      = 'rgvd7ju59k';
+		$this->client->client_id          = 'ajocsi6rfi22tzv7kx5g8iop';//'bpcs5km3fjeshyozkh2p7azc';//
+		$this->client->client_secret      = 'rgvd7ju59k';//'ri5rr651e6';//
 	}
 
 	public function getAccessToken($redirect_uri){
@@ -199,13 +199,14 @@ class MY_Etsy {
 
 	public function postListing($invid, $listing) {
 
-		$basepath = 'http://mjtrends.b-cdn.net';
+		$basepath = 'http://localhost';//http://mjtrends.b-cdn.net';
 		if($this->client->access_token){
 			try {
 				$api_url = 'https://openapi.etsy.com/v2/listings';
 				$this->client->CallAPI($api_url, 'POST', $listing['listing_data'], array('FailOnAccessError'=>true), $response);
 				
 				var_dump($response);
+				exit;
 
 				if(isset($response->results) && !empty($response->results[0]->listing_id)) {
 					$listing_id = $response->results[0]->listing_id; // Etsy id
@@ -249,7 +250,7 @@ class MY_Etsy {
 					}
 				} else {
 					$resp[$invid]['data'] = 'error';
-					//$resp[$invid]['msg'] = str_replace('_', ' ', implode('<br>', array_keys($response)));					
+					$resp[$invid]['msg'] = str_replace('_', ' ', implode('<br>', array_keys($response)));					
 				}
 			} catch (OAuthException $e) {
 				$resp[$invid]['access'] = 'error';
@@ -439,7 +440,21 @@ class MY_Etsy {
 		$json = file_get_contents($access_file);
 		$t = json_decode($json,true);
 
-		$oauth->setToken($t['value'], $t['secret']);
+		$value = "";
+		$secret = "";
+// print_r($t['value']); echo "\n"; exit;
+		forEach($t as $value) { 
+			forEach($value as $res => $a) { 
+				if ($res === 'value') {
+					$value = $a;
+				} else if ($res === 'secret') {
+					$secret = $a;
+				}
+
+			}
+		}
+		
+		$oauth->setToken($value, $secret);
 
 		$api_url = "https://openapi.etsy.com/v2/users/__SELF__";
 	 	$data = $oauth->fetch($api_url, null, OAUTH_HTTP_METHOD_GET);
@@ -475,7 +490,7 @@ class MY_Etsy {
 	        $req_token['oauth_token']
 	    );
 
-	    header("Location: " . $login_url);
+	    header("Access-Control-Allow-Origin: *, Location: " . $login_url);
 	}
 
 }

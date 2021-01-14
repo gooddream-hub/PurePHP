@@ -205,11 +205,12 @@ class http_class
 					$this->SetDataAccessError("reached the end of data while reading from the HTTP server connection");
 					return(0);
 				}
-
+				//print_r($this->connection); echo "\n";
 				$data=fgets($this->connection,100);
-				// $data = 'HTTP/1.1 201 Created';
+				//$data = 'HTTP/1.1 201 Created';
+				print_r($data); echo "*********\n";
 			}
-
+			
 			if(GetType($data)!="string"
 			|| strlen($data)==0)
 			{
@@ -234,12 +235,13 @@ class http_class
 	Function PutLine($line)
 	{
 		if($this->debug)
-			$this->OutputDebug("C $line");
+			$this->OutputDebug("C $line"); 
+			
 		if(!fputs($this->connection,$line."\r\n"))
 		{
 			$this->SetDataAccessError("it was not possible to send a line to the HTTP server");
 			return(0);
-		}
+		}		
 		return(1);
 	}
 
@@ -247,14 +249,27 @@ class http_class
 	{
 		if(strlen($data))
 		{
-			if($this->debug)
+			if($this->debug) {
+				//echo "-------";
 				$this->OutputDebug('C '.$data);
-			if(!fputs($this->connection,$data))
+				//$data=fgets($this->connection,100);echo "----111111111111----"; print_r($data); echo "\n";
+			}
+			//echo "----xxxxxx----"; print_r($data);
+			// print_r($this->connection);
+			// echo "\n";
+			// print_r($data);
+			// echo "\n";
+			//$data=fgets($this->connection,100);echo "----fdfd----"; print_r($data); echo "\n";
+			print_r($data); echo "\n";
+			if(!fputs($this->connection, $data))
 			{
 				$this->SetDataAccessError("it was not possible to send data to the HTTP server");
 				return(0);
 			}
+			// echo "3333333333";
+			$data=fgets($this->connection,100); echo "\n----xxxxxx----"; print_r($data); echo "\n";
 		}
+		//echo "444444";
 		return(1);
 	}
 
@@ -419,6 +434,7 @@ class http_class
 		if($this->debug)
 			$this->OutputDebug('Connecting to '.$server_type.' server IP '.$ip.' port '.$port.'...');
 		// $ip = 'openapi.etsy.com';
+		echo $ip;
 		if($ssl)
 			$ip="ssl://".$host_name;
 		if(($this->connection=($this->timeout ? @fsockopen($ip, $port, $errno, $error, $this->timeout) : @fsockopen($ip, $port, $errno)))==0)
@@ -645,7 +661,7 @@ class http_class
 		)
 		*/
 
-		$arguments['Protocol'] = 'http';
+		//$arguments['Protocol'] = 'http';
 		if(strlen($this->error))
 			return($this->error);
 		$error_code = HTTP_CLIENT_ERROR_UNSPECIFIED_ERROR;
@@ -693,6 +709,7 @@ class http_class
 			$server_type = 'HTTP proxy';
 		}
 		$ssl=(strtolower($this->protocol)=="https" && strlen($this->proxy_host_name)==0);
+		
 		if($ssl
 		&& strlen($this->socks_host_name))
 			return($this->SetError('establishing SSL connections via a SOCKS server is not yet supported', HTTP_CLIENT_ERROR_INVALID_PARAMETERS));
@@ -765,7 +782,7 @@ class http_class
 				}
 				if(strlen($error)==0)
 				{
-					$error=$this->Connect($host_name, $host_port, $ssl, $server_type);
+					$error=$this->Connect($host_name, $host_port, $ssl, $server_type);					
 					$error_code = $this->error_code;
 				}
 			}
@@ -1266,7 +1283,7 @@ class http_class
 						$this->request_body.=$stream[$part]["Data"];
 					elseif(IsSet($stream[$part]["File"]))
 					{
-						if(!($file=@fopen($stream[$part]["File"],"rb")))
+						if(!($file=@fopen($stream[$part]["File"],"wb")))
 							return($this->SetPHPError("could not open upload file ".$stream[$part]["File"], $php_errormsg, HTTP_CLIENT_ERROR_CANNOT_ACCESS_LOCAL_FILE));
 						while(!feof($file))
 						{
@@ -1319,7 +1336,7 @@ class http_class
 			}
 			$request_uri=strtolower($this->protocol)."://".$this->host_name.(($this->host_port==0 || $this->host_port==$default_port) ? "" : ":".$this->host_port).$this->request_uri;
 		}
-		
+				
 		if($this->use_curl)
 		{
 			$version=(GetType($v=curl_version())=="array" ? (IsSet($v["version"]) ? $v["version"] : "0.0.0") : (preg_match("/^libcurl\\/([0-9]+\\.[0-9]+\\.[0-9]+)/",$v,$m) ? $m[1] : "0.0.0"));
@@ -1331,17 +1348,18 @@ class http_class
 
 		$this->request=$this->request_method." ".$request_uri." HTTP/".$protocol_version;
 		// POST /v2/listings HTTP/1.1
-		
+//-------------headers		
+		print_r($this->request);echo "\n";
 		if($body_length
 		|| ($body_length=strlen($this->request_body))
 		|| !strcmp($this->request_method, 'POST'))
 			$this->request_headers["Content-Length"]=$body_length;
-
+//----------------------------------Headers
 		for($headers=array(),$host_set=0,Reset($this->request_headers),$header=0;$header<count($this->request_headers);Next($this->request_headers),$header++)
 		{
 			$header_name=Key($this->request_headers);
-			
 			$header_value=$this->request_headers[$header_name];
+			
 			if(GetType($header_value)=="array")
 			{
 				for(Reset($header_value),$value=0;$value<count($header_value);Next($header_value),$value++)
@@ -1378,6 +1396,7 @@ class http_class
 				}
 			}
 		}
+		print_r($headers);
 		// Same in Data
 		$next_state = "RequestSent";
 		if($this->use_curl)
@@ -1392,7 +1411,7 @@ class http_class
 					$request_body.=$post_parts[$part]["HEADERS"].$post_parts[$part]["DATA"];
 					if(IsSet($post_parts[$part]["FILENAME"]))
 					{
-						if(!($file=@fopen($post_parts[$part]["FILENAME"],"rb")))
+						if(!($file=@fopen($post_parts[$part]["FILENAME"],"wb")))
 						{
 							$this->SetPHPError("could not open upload file ".$post_parts[$part]["FILENAME"], $php_errormsg, HTTP_CLIENT_ERROR_CANNOT_ACCESS_LOCAL_FILE);
 							$success=0;
@@ -1425,6 +1444,7 @@ class http_class
 			curl_setopt($this->connection,CURLOPT_SSL_VERIFYPEER,0);
 			curl_setopt($this->connection,CURLOPT_SSL_VERIFYHOST,0);
 			$request=$this->request."\r\n".implode("\r\n",$headers)."\r\n\r\n".$request_body;
+			
 			curl_setopt($this->connection,CURLOPT_CUSTOMREQUEST,$request);
 			if($this->debug)
 				$this->OutputDebug("C ".$request);
@@ -1436,11 +1456,12 @@ class http_class
 		}
 		else
 		{
-			// Same in Data
+			// Same in Data			
 			if(($success=$this->PutLine($this->request)))
 			{
 				for($header=0;$header<count($headers);$header++)
 				{
+					echo "----header----"; print_r($headers[$header]); echo "\n";
 					if(!$success=$this->PutLine($headers[$header]))
 						break;
 				}
@@ -1450,9 +1471,11 @@ class http_class
 					if(IsSet($arguments['StreamRequest']))
 						$next_state = "SendingRequestBody";
 					elseif($body_length)
-					{
-						if(strlen($this->request_body))
-							$success=$this->PutData($this->request_body);
+					{ 
+						if(strlen($this->request_body)) {
+							//$data=fgets($this->connection,100);echo "----dfdfdfdfdfdf----"; print_r($data); echo "\n";
+							$success=$this->PutData($this->request_body); 
+						}
 						else
 						{
 							for($part=0;$part<count($post_parts);$part++)
@@ -1462,7 +1485,7 @@ class http_class
 									break;
 								if(IsSet($post_parts[$part]["FILENAME"]))
 								{
-									if(!($file=@fopen($post_parts[$part]["FILENAME"],"rb")))
+									if(!($file=@fopen($post_parts[$part]["FILENAME"],"wb")))
 									{
 										$this->SetPHPError("could not open upload file ".$post_parts[$part]["FILENAME"], $php_errormsg, HTTP_CLIENT_ERROR_CANNOT_ACCESS_LOCAL_FILE);
 										$success=0;
@@ -1489,9 +1512,17 @@ class http_class
 							if($success)
 								$success=$this->PutLine("--".$boundary."--");
 						}
-						if($success)
-							$sucess=$this->FlushData();
-					}
+						if($success) {
+							// if(feof($this->connection))
+							// {
+							// 	$this->SetDataAccessError("reached the end of data while reading from the HTTP server connection");
+							// 	return(0);
+							// }
+							//print_r($this->connection); echo "\n";
+							//$data=fgets($this->connection,100);echo "----dfdfdfdfdfdf----"; print_r($data); echo "\n";
+							$success=$this->FlushData();
+						}
+					} 
 				}
 			}
 		}
@@ -1573,9 +1604,10 @@ class http_class
 
 	Function ReadReplyHeadersResponse(&$headers)
 	{
-		$headers=array();
+		
 		if(strlen($this->error))
 			return($this->error);
+		
 		switch($this->state)
 		{
 			case "Disconnected":
@@ -1595,21 +1627,26 @@ class http_class
 			default:
 				return($this->SetError("can not get request headers in the current connection state", HTTP_CLIENT_ERROR_INVALID_PARAMETERS));
 		}
+		
 		$this->content_length=$this->read_length=$this->read_response=$this->remaining_chunk=0;
 		$this->content_length_set=$this->chunked=$this->last_chunk_read=$chunked=0;
 		$this->force_close = $this->connection_close=0;
-
+		
 		for($this->response_status="";;)
 		{
-
+			echo "-----5";
 			$line=$this->GetLine();
-
-			if(GetType($line)!="string")
+			echo "-----\n";
+			print_r($line);
+			if(GetType($line)!="string") {echo "--error-\n";
 				return($this->SetError("could not read request reply: ".$this->error, $this->error_code));
+			}
 			if(strlen($this->response_status)==0)
 			{
 				if(!preg_match($match="/^http\\/[0-9]+\\.[0-9]+[ \t]+([0-9]+)[ \t]*(.*)\$/i",$line,$matches))
 					return($this->SetError("it was received an unexpected HTTP response status", HTTP_CLIENT_ERROR_PROTOCOL_FAILURE));
+					//print_r($matches); exit;
+					
 				$this->response_status=$matches[1];
 				$this->response_message=$matches[2];
 				if($this->response_status == 204)
@@ -1980,20 +2017,20 @@ class http_class
 	
 	Function ReadReplyHeaders(&$headers)
 	{
-		// There is issue in here.
+		echo "\n000";print_r($headers);
+		// There is issue in here.		
 		if(strlen($error=$this->ReadReplyHeadersResponse($headers)))
 			return($error);
-		// Fixing now.
-
+		// Fixing now.		
 		$proxy_authorization="";
-
+		echo "\n111";print_r($headers);
 		while(!strcmp($this->response_status, "100"))
 		{
 			$this->state="RequestSent";
 			if(strlen($error=$this->ReadReplyHeadersResponse($headers)))
 				return($error);
 		}
-
+		
 		switch($this->response_status)
 		{
 			case "301":
@@ -2011,6 +2048,7 @@ class http_class
 			case "401":
 				return($this->Authenticate($headers, 0, $proxy_authorization, $this->request_user, $this->request_password, $this->request_realm, $this->request_workstation));
 		}
+		echo "=";print_r($this->response_status);echo "=";
 		return("");
 	}
 

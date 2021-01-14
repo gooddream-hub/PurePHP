@@ -9,7 +9,7 @@ if (empty($destination_file))
 
 $consumer_key = getenv('ETSY_CONSUMER_KEY');
 $consumer_secret = getenv('ETSY_CONSUMER_SECRET');
-
+echo $consumer_key;
 if (empty($consumer_key) || empty($consumer_secret))
 {
     error_log("Env vars ETSY_CONSUMER_KEY and ETSY_CONSUMER_SECRET are required\n\nExample:\nexport ETSY_CONSUMER_KEY=qwertyuiop123456dfghj\nexport ETSY_CONSUMER_SECRET=qwertyuiop12");

@@ -2,7 +2,7 @@
 	
 	$config = new stdClass();
 
-	$config->domain = "http://localhost:140/";
+	$config->domain = "http://localhost/";
 	// $config->domain = "https://fabric-bolt.com/";
 
 	$config->domain_ssl = "https://www.mjtrends.com/";
