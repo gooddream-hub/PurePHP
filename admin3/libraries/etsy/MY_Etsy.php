@@ -433,7 +433,7 @@ class MY_Etsy {
 	public function test_etsy_token(){
 		$key = "ajocsi6rfi22tzv7kx5g8iop";
 		$secret = "rgvd7ju59k";
-		$oauth = new OAuth($key, $secret);
+		$oauth = new OAuth($key, $secret,OAUTH_SIG_METHOD_HMACSHA1, OAUTH_AUTH_TYPE_URI);
 		$oauth->disableSSLChecks();
 
 		$access_file = SITE_ROOT_PATH.'admin3/libraries/etsy/access_token.json';
@@ -454,13 +454,14 @@ class MY_Etsy {
 			}
 		}
 		
-		$oauth->setToken($value, $secret);
-
+		$oauth->setToken("3957d385437cf317fb5fa343697b63", "8d74d92f6e");
+try {
 		$api_url = "https://openapi.etsy.com/v2/users/__SELF__";
 	 	$data = $oauth->fetch($api_url, null, OAUTH_HTTP_METHOD_GET);
 	 	$json = $oauth->getLastResponse();
 	 	$response = json_decode($json);
-        
+	 
+} catch(OAuthException $e) { print_r($e->getMessage()); echo "\n";}
 	 	if( empty($response->results) ){
 	 		return false;
 	 	} else {
